@@ -51,13 +51,13 @@ module ROB(
     output wire[`ROB_SIZE_LOG - 1:0] rob_frontid
 );
     reg[`ROB_SIZE_LOG - 1:0] head, tail;    //a queue, range from (head,tail]
-    reg is_ready[`ROB_SIZE_LOG - 1:0];
-    reg[`OP_SIZE_LOG - 1:0] op_type[`ROB_SIZE_LOG - 1:0];
-    reg[4:0] rd[`ROB_SIZE_LOG - 1:0];
-    reg[31:0] value[`ROB_SIZE_LOG - 1:0];
-    reg[31:0] to_pc[`ROB_SIZE_LOG - 1:0];
-    reg[31:0] cur_pc[`ROB_SIZE_LOG - 1:0];
-    reg pred[`ROB_SIZE_LOG - 1:0];
+    reg is_ready[`ROB_SIZE - 1:0];
+    reg[`OP_SIZE_LOG - 1:0] op_type[`ROB_SIZE - 1:0];
+    reg[4:0] rd[`ROB_SIZE - 1:0];
+    reg[31:0] value[`ROB_SIZE - 1:0];
+    reg[31:0] to_pc[`ROB_SIZE - 1:0];
+    reg[31:0] cur_pc[`ROB_SIZE - 1:0];
+    reg pred[`ROB_SIZE - 1:0];
 
     wire is_empty = head == tail;
     wire[`ROB_SIZE_LOG - 1:0] front = (head + 1) & (`ROB_SIZE - 1);

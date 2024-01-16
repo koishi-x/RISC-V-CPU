@@ -46,7 +46,7 @@ module ICache (
                 end
             end
             else if (!hit) begin
-                is_busy <= 0;
+                is_busy <= 1;
                 memc_enable <= 1;
                 addr_to_memc <= pc_from_if;
             end

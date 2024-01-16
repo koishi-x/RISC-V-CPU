@@ -42,7 +42,7 @@ module mem_ctrl (
             mem_wr <= 0;
             ic_enable <= 0;
             slb_enable <= 0;
-            //mem_a <= 0;
+            mem_a <= 0;
         end
         else begin
             mem_wr <= 0;
@@ -53,23 +53,21 @@ module mem_ctrl (
                     if (!ic_enable && !slb_enable) begin    //wait a cycle,don't know why need do this
                         if (slb_valid) begin
                             if (slb_wr) begin   //store
-                                mem_wr <= 0;    //do not store immediately
+                                //mem_wr <= 0;    //do not store immediately
                                 op_type <= 2;
-                                pos <= 0;
-                                mem_a <= addr_from_slb;
+                                mem_a <= 0;
                             end else begin    //load
-                                mem_wr <= 0;
+                                //mem_wr <= 0;
                                 op_type <= 3;
-                                pos <= 0;
                                 mem_a <= addr_from_slb;
                             end
                         end
                         else if (ic_valid) begin
-                            mem_wr <= 0;
+                            //mem_wr <= 0;
                             mem_a <= addr_from_ic;
-                            pos <= 0;
                             op_type <= 1;
                         end
+                        pos <= 0;
                     end
                 end
                 2'd1: //ins read
@@ -104,7 +102,7 @@ module mem_ctrl (
                         slb_enable <= 1;
                     end
                     else begin
-                        if (pos == 3'd0) mem_a <= addr_from_slb;
+                        if (pos == 0) mem_a <= addr_from_slb;
                         else mem_a <= mem_a + 1;
                         pos <= pos + 1;
                     end

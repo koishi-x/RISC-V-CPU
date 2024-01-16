@@ -39,17 +39,18 @@ module RS(
     input wire pred_fail_flag,
     output reg RS_next_full
 );
-    reg is_busy[`RS_SIZE_LOG - 1:0];
-    reg[`OP_SIZE_LOG - 1:0] op_type[`RS_SIZE_LOG - 1:0];
-    reg[31:0] vj[`RS_SIZE_LOG - 1:0];
-    reg[`ROB_SIZE_LOG - 1:0] qj[`RS_SIZE_LOG - 1:0];
-    reg rj[`RS_SIZE_LOG - 1:0];
-    reg[31:0] vk[`RS_SIZE_LOG - 1:0];
-    reg[`ROB_SIZE_LOG - 1:0] qk[`RS_SIZE_LOG - 1:0];
-    reg rk[`RS_SIZE_LOG - 1:0];
-    reg[31:0] imm[`RS_SIZE_LOG - 1:0];
-    reg[`ROB_SIZE_LOG - 1:0] dest_robid[`RS_SIZE_LOG - 1:0];
-    reg[31:0] cur_pc[`RS_SIZE_LOG - 1:0];
+    reg is_busy[`RS_SIZE - 1:0];
+    reg[`OP_SIZE_LOG - 1:0] op_type[`RS_SIZE - 1:0];
+    reg[31:0] vj[`RS_SIZE - 1:0];
+    reg[`ROB_SIZE_LOG - 1:0] qj[`RS_SIZE - 1:0];
+    reg rj[`RS_SIZE - 1:0];
+    reg[31:0] vk[`RS_SIZE - 1:0];
+    reg[`ROB_SIZE_LOG - 1:0] qk[`RS_SIZE - 1:0];
+    reg rk[`RS_SIZE - 1:0];
+    reg[31:0] imm[`RS_SIZE - 1:0];
+    reg[`ROB_SIZE_LOG - 1:0] dest_robid[`RS_SIZE - 1:0];
+    reg[31:0] cur_pc[`RS_SIZE - 1:0];
+
 
     reg has_ready;
     integer i, busy_cnt, ready_pos, empty_pos;
@@ -74,10 +75,27 @@ module RS(
         RS_next_full = busy_cnt + issue_valid - has_ready >= `RS_SIZE;
     end
 
+
+    reg aaaa;
+    wire qwert0 = is_busy[0];
+    wire qwert1 = is_busy[1];
+    wire qwert2 = is_busy[2];
+    
+    wire qwert3 = is_busy[3];
+    wire qwert4 = is_busy[4];
+    wire qwert5 = is_busy[5];
+    wire qwert6 = is_busy[6];
+    wire qwert7 = is_busy[7];
+    wire qwert8 = is_busy[8];
+    wire qwert9 = is_busy[9];
+    wire qwert10 = is_busy[10];
+    wire bbbb = aaaa;
+
     integer j;
     always @(posedge clk) begin
         if (rst || pred_fail_flag) begin
             for (j = 0; j < `RS_SIZE; j = j + 1) begin
+                aaaa <= 0;
                 is_busy[j] <= 0;
                 rj[j] <= 0;
                 rk[j] <= 0;

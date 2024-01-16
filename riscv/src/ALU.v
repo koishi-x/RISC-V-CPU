@@ -21,6 +21,9 @@ module alu (
 );
     always @(*) begin
         CBD_enable = 0;
+        CBD_topc = -1;
+        CBD_value = 0;
+        CBD_ROBid = 0;
         if (!rst && rdy && RS_valid && RS_op != `OP_NULL) begin
             CBD_enable = 1;
             CBD_ROBid = RS_ROBid;
@@ -33,7 +36,7 @@ module alu (
                 end
                 `OP_JALR: begin
                     CBD_value = RS_curpc + 4;
-                    CBD_topc = (RS_curpc + RS_vj) & (~32'b1);
+                    CBD_topc = (RS_imm + RS_vj) & 32'hFFFFFFFE;
                 end
                 `OP_BEQ: begin
                     if (RS_vj == RS_vk) begin
@@ -47,7 +50,7 @@ module alu (
                 `OP_BNE: begin
                     if (RS_vj != RS_vk) begin
                         CBD_topc = RS_curpc + RS_imm;
-                        CBD_value = 1;//not neccesary?
+                        CBD_value = 1;
                     end else begin
                         CBD_topc = RS_curpc + 4;
                         CBD_value = 0;
@@ -56,7 +59,7 @@ module alu (
                 `OP_BLT: begin
                     if ($signed(RS_vj) < $signed(RS_vk)) begin
                         CBD_topc = RS_curpc + RS_imm;
-                        CBD_value = 1;//not neccesary?
+                        CBD_value = 1;
                     end else begin
                         CBD_topc = RS_curpc + 4;
                         CBD_value = 0;
@@ -100,7 +103,7 @@ module alu (
                 `OP_SRAI: CBD_value = $signed(RS_vj) >>> RS_imm[4:0];
                 `OP_ADD: CBD_value = RS_vj + RS_vk;
                 `OP_SUB: CBD_value = RS_vj - RS_vk;
-                `OP_SLL: CBD_value = RS_vj << RS_vk[4:0];
+                `OP_SLL: CBD_value = RS_vj <<< RS_vk[4:0];
                 `OP_SLT: CBD_value = ($signed(RS_vj) < $signed(RS_vk));
                 `OP_SLTU: CBD_value = (RS_vj < RS_vk);
                 `OP_XOR: CBD_value = RS_vj ^ RS_vk;

@@ -45,18 +45,18 @@ module SLB(
 
     output wire SLB_next_full
 );
-    reg is_busy[`SLB_SIZE_LOG - 1:0];
-    reg is_send_to_rob[`SLB_SIZE_LOG - 1:0];    //only used when store
-    reg is_store_ready[`SLB_SIZE_LOG - 1:0];    //only used when store
-    reg[`OP_SIZE_LOG - 1:0] op_type[`SLB_SIZE_LOG - 1:0];
-    reg[31:0] vj[`SLB_SIZE_LOG - 1:0];
-    reg[`ROB_SIZE_LOG - 1:0] qj[`SLB_SIZE_LOG - 1:0];
-    reg rj[`SLB_SIZE_LOG - 1:0];
-    reg[31:0] vk[`SLB_SIZE_LOG - 1:0];
-    reg[`ROB_SIZE_LOG - 1:0] qk[`SLB_SIZE_LOG - 1:0];
-    reg rk[`SLB_SIZE_LOG - 1:0];
-    reg[31:0] imm[`SLB_SIZE_LOG - 1:0];
-    reg[`ROB_SIZE_LOG - 1:0] dest_robid[`SLB_SIZE_LOG - 1:0];
+    reg is_busy[`SLB_SIZE - 1:0];
+    reg is_send_to_rob[`SLB_SIZE - 1:0];    //only used when store
+    reg is_store_ready[`SLB_SIZE - 1:0];    //only used when store
+    reg[`OP_SIZE_LOG - 1:0] op_type[`SLB_SIZE - 1:0];
+    reg[31:0] vj[`SLB_SIZE - 1:0];
+    reg[`ROB_SIZE_LOG - 1:0] qj[`SLB_SIZE - 1:0];
+    reg rj[`SLB_SIZE - 1:0];
+    reg[31:0] vk[`SLB_SIZE - 1:0];
+    reg[`ROB_SIZE_LOG - 1:0] qk[`SLB_SIZE - 1:0];
+    reg rk[`SLB_SIZE - 1:0];
+    reg[31:0] imm[`SLB_SIZE - 1:0];
+    reg[`ROB_SIZE_LOG - 1:0] dest_robid[`SLB_SIZE - 1:0];
 
     reg[`SLB_SIZE_LOG - 1:0] head, tail, back;
     wire is_empty = head == tail;
