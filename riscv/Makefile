@@ -37,7 +37,3 @@ clear:
 test_sim: build_sim run_sim
 
 .PHONY: _no_testcase_name_check build_sim build_sim_test run_sim clear test_sim
-
-all:
-	cd riscv && make build_sim
-	cp ./riscv/testspace/test code
