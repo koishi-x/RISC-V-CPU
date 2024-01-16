@@ -47,7 +47,7 @@ module mem_ctrl (
         else begin
             mem_wr <= 0;
             case (op_type)
-                2'd0: begin
+                0: begin
                     ic_enable <= 0;
                     slb_enable <= 0;
                     if (!ic_enable && !slb_enable) begin    //wait a cycle,don't know why need do this
@@ -61,16 +61,17 @@ module mem_ctrl (
                                 op_type <= 3;
                                 mem_a <= addr_from_slb;
                             end
+                            pos <= 0;
                         end
                         else if (ic_valid) begin
                             //mem_wr <= 0;
                             mem_a <= addr_from_ic;
                             op_type <= 1;
+                            pos <= 0;
                         end
-                        pos <= 0;
                     end
                 end
-                2'd1: //ins read
+                1: //ins read
                 if (ic_valid) begin    
                     case(pos)   //todo: why start from 1
                         3'd1: inst_to_ic[7:0] <= mem_din;
@@ -87,7 +88,7 @@ module mem_ctrl (
                         pos <= pos + 1;
                     end
                 end
-                2'd2: if (!io_buffer_full || addr_from_slb[17:16] != 2'b11) begin
+                2: if (!io_buffer_full || addr_from_slb[17:16] != 2'b11) begin
                     mem_wr <= 1;
                     case (pos) 
                         3'd0: mem_dout <= slb_din[7:0];
@@ -108,7 +109,7 @@ module mem_ctrl (
                     end
                 end
 
-                2'd3:   //load
+                3:   //load
                 if (slb_valid) begin
                     case(pos) 
                         3'd1: slb_dout[7:0] <= mem_din;
@@ -125,6 +126,7 @@ module mem_ctrl (
                         pos <= pos + 1;
                     end
                 end
+                else op_type <= 0;
             endcase
         end
     end

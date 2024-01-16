@@ -41,7 +41,7 @@ module alu (
                 `OP_BEQ: begin
                     if (RS_vj == RS_vk) begin
                         CBD_topc = RS_curpc + RS_imm;
-                        CBD_value = 1;//valud = 1 means jump
+                        CBD_value = 1;//value = 1 means jump
                     end else begin
                         CBD_topc = RS_curpc + 4;
                         CBD_value = 0;
@@ -68,7 +68,7 @@ module alu (
                 `OP_BGE: begin
                     if ($signed(RS_vj) >= $signed(RS_vk)) begin
                         CBD_topc = RS_curpc + RS_imm;
-                        CBD_value = 1;//not neccesary?
+                        CBD_value = 1;
                     end else begin
                         CBD_topc = RS_curpc + 4;
                         CBD_value = 0;
@@ -77,7 +77,7 @@ module alu (
                 `OP_BLTU: begin
                     if (RS_vj < RS_vk) begin
                         CBD_topc = RS_curpc + RS_imm;
-                        CBD_value = 1;//not neccesary?
+                        CBD_value = 1;
                     end else begin
                         CBD_topc = RS_curpc + 4;
                         CBD_value = 0;
@@ -86,7 +86,7 @@ module alu (
                 `OP_BGEU: begin
                     if (RS_vj >= RS_vk) begin
                         CBD_topc = RS_curpc + RS_imm;
-                        CBD_value = 1;//not neccesary?
+                        CBD_value = 1;
                     end else begin
                         CBD_topc = RS_curpc + 4;
                         CBD_value = 0;

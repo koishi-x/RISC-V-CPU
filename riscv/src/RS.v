@@ -75,30 +75,13 @@ module RS(
         RS_next_full = busy_cnt + issue_valid - has_ready >= `RS_SIZE;
     end
 
-
-    reg aaaa;
-    wire qwert0 = is_busy[0];
-    wire qwert1 = is_busy[1];
-    wire qwert2 = is_busy[2];
-    
-    wire qwert3 = is_busy[3];
-    wire qwert4 = is_busy[4];
-    wire qwert5 = is_busy[5];
-    wire qwert6 = is_busy[6];
-    wire qwert7 = is_busy[7];
-    wire qwert8 = is_busy[8];
-    wire qwert9 = is_busy[9];
-    wire qwert10 = is_busy[10];
-    wire bbbb = aaaa;
-
-    integer j;
+    //integer j;
     always @(posedge clk) begin
         if (rst || pred_fail_flag) begin
-            for (j = 0; j < `RS_SIZE; j = j + 1) begin
-                aaaa <= 0;
-                is_busy[j] <= 0;
-                rj[j] <= 0;
-                rk[j] <= 0;
+            for (i = 0; i < `RS_SIZE; i = i + 1) begin
+                is_busy[i] <= 0;
+                rj[i] <= 0;
+                rk[i] <= 0;
             end
             ALU_enable <= 0;
         end
@@ -117,26 +100,26 @@ module RS(
                 dest_robid[empty_pos] <= issue_robid;
                 cur_pc[empty_pos] <= issue_curPc;
 
-                if (ALU_valid) begin
-                    if (!issue_rj && issue_qj == ALU_robid) begin
-                        rj[empty_pos] <= 1;
-                        vj[empty_pos] <= ALU_value;
-                    end
-                    if (!issue_rk && issue_qk == ALU_robid) begin
-                        rk[empty_pos] <= 1;
-                        vk[empty_pos] <= ALU_value;
-                    end
-                end
-                if (SLB_load_valid) begin
-                    if (!issue_rj && issue_qj == SLB_load_robid) begin
-                        rj[empty_pos] <= 1;
-                        vj[empty_pos] <= SLB_load_value;
-                    end
-                    if (!issue_rk && issue_qk == SLB_load_robid) begin
-                        rk[empty_pos] <= 1;
-                        vk[empty_pos] <= SLB_load_value;
-                    end
-                end
+                // if (ALU_valid) begin
+                //     if (!issue_rj && issue_qj == ALU_robid) begin
+                //         rj[empty_pos] <= 1;
+                //         vj[empty_pos] <= ALU_value;
+                //     end
+                //     if (!issue_rk && issue_qk == ALU_robid) begin
+                //         rk[empty_pos] <= 1;
+                //         vk[empty_pos] <= ALU_value;
+                //     end
+                // end
+                // if (SLB_load_valid) begin
+                //     if (!issue_rj && issue_qj == SLB_load_robid) begin
+                //         rj[empty_pos] <= 1;
+                //         vj[empty_pos] <= SLB_load_value;
+                //     end
+                //     if (!issue_rk && issue_qk == SLB_load_robid) begin
+                //         rk[empty_pos] <= 1;
+                //         vk[empty_pos] <= SLB_load_value;
+                //     end
+                // end
 
                 case(issue_op_type)
                     `OP_LUI, `OP_AUIPC, `OP_JAL: begin
@@ -159,34 +142,34 @@ module RS(
                 robid_to_ALU <= dest_robid[ready_pos];
                 curpc_to_ALU <= cur_pc[ready_pos];
                 is_busy[ready_pos] <= 0;
-                has_ready <= 0;
+                //has_ready <= 0;
             end
 
             if (ALU_valid) begin 
-                for (j = 0; j < `RS_SIZE; j = j + 1) begin
-                    if (is_busy[j]) begin
-                        if (!rj[j] && qj[j] == ALU_robid) begin
-                            rj[j] <= 1;
-                            vj[j] <= ALU_value;
+                for (i = 0; i < `RS_SIZE; i = i + 1) begin
+                    if (is_busy[i]) begin
+                        if (!rj[i] && qj[i] == ALU_robid) begin
+                            rj[i] <= 1;
+                            vj[i] <= ALU_value;
                         end
-                        if (!rk[j] && qk[j] == ALU_robid) begin
-                            rk[j] <= 1;
-                            vk[j] <= ALU_value;
+                        if (!rk[i] && qk[i] == ALU_robid) begin
+                            rk[i] <= 1;
+                            vk[i] <= ALU_value;
                         end
                     end
                 end
             end
 
             if (SLB_load_valid) begin
-                for (j = 0; j < `RS_SIZE; j = j + 1) begin
-                    if (is_busy[j]) begin
-                        if (!rj[j] && qj[j] == SLB_load_robid) begin
-                            rj[j] <= 1;
-                            vj[j] <= SLB_load_value;
+                for (i = 0; i < `RS_SIZE; i = i + 1) begin
+                    if (is_busy[i]) begin
+                        if (!rj[i] && qj[i] == SLB_load_robid) begin
+                            rj[i] <= 1;
+                            vj[i] <= SLB_load_value;
                         end
-                        if (!rk[j] && qk[j] == SLB_load_robid) begin
-                            rk[j] <= 1;
-                            vk[j] <= SLB_load_value;
+                        if (!rk[i] && qk[i] == SLB_load_robid) begin
+                            rk[i] <= 1;
+                            vk[i] <= SLB_load_value;
                         end
                     end
                 end

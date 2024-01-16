@@ -119,8 +119,8 @@ module ROB(
                     upd_prd_enable <= 1;
                     upd_prd_index <= cur_pc[front][9:2];
                     //upd_prd_isjump <= value[front] == 1;
-                    upd_prd_isjump <= value[front];
-                    if (value[front] ^ pred[front]) begin
+                    upd_prd_isjump <= (value[front] == 1);
+                    if (value[front] == 1 ^ pred[front]) begin
                         pred_fail_flag <= 1;
                         toPc_to_if <= to_pc[front];
                     end

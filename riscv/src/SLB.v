@@ -101,7 +101,7 @@ module SLB(
             if (is_waiting_mem && mem_valid) begin
                 is_waiting_mem <= 0;
                 mem_enable <= 0;
-                head <= (head + 1) & (`SLB_SIZE - 1);
+                head <= front;
                 is_busy[front] <= 0;
                 is_store_ready[front] <= 0;
                 is_send_to_rob[front] <= 0;
@@ -125,26 +125,26 @@ module SLB(
                 dest_robid[nextid] <= issue_robid;
                 tail <= nextid;
 
-                if (ALU_valid) begin
-                    if(!issue_rj && issue_qj == ALU_robid) begin
-                        rj[nextid] <= 1;
-                        vj[nextid] <= ALU_value;
-                    end
-                    if(!issue_rk && issue_qk == ALU_robid) begin
-                        rk[nextid] <= 1;
-                        vk[nextid] <= ALU_value;
-                    end
-                end
-                if (CBD_enable) begin
-                    if(!issue_rj && issue_qj == CBD_ROBid) begin
-                        rj[nextid] <= 1;
-                        vj[nextid] <= CBD_value;
-                    end
-                    if(!issue_rk && issue_qk == CBD_ROBid) begin
-                        rk[nextid] <= 1;
-                        vk[nextid] <= CBD_value;
-                    end
-                end
+                // if (ALU_valid) begin
+                //     if(!issue_rj && issue_qj == ALU_robid) begin
+                //         rj[nextid] <= 1;
+                //         vj[nextid] <= ALU_value;
+                //     end
+                //     if(!issue_rk && issue_qk == ALU_robid) begin
+                //         rk[nextid] <= 1;
+                //         vk[nextid] <= ALU_value;
+                //     end
+                // end
+                // if (CBD_enable) begin
+                //     if(!issue_rj && issue_qj == CBD_ROBid) begin
+                //         rj[nextid] <= 1;
+                //         vj[nextid] <= CBD_value;
+                //     end
+                //     if(!issue_rk && issue_qk == CBD_ROBid) begin
+                //         rk[nextid] <= 1;
+                //         vk[nextid] <= CBD_value;
+                //     end
+                // end
             end
             if (ALU_valid) begin
                 for (i = 0; i < `SLB_SIZE; i = i + 1) begin
@@ -183,8 +183,14 @@ module SLB(
             end
 
             if (rob_store_valid) begin 
-                is_store_ready[front] <= 1;
-                back <= front;
+                for (i = 0; i < `SLB_SIZE; i = i + 1) begin
+                    if (is_busy[i] && dest_robid[i] == rob_store_valid_robid) begin
+                        is_store_ready[i] <= 1;
+                        back <= i;
+                    end
+                end
+                // is_store_ready[front] <= 1;
+                // back <= front;
             end
 
             if (!is_waiting_mem) begin
@@ -260,7 +266,7 @@ module SLB(
                         `OP_LB: CBD_value <= {{24{mem_dout[7]}}, mem_dout[7:0]};
                         `OP_LH: CBD_value <= {{16{mem_dout[15]}}, mem_dout[15:0]};
                         `OP_LW: CBD_value <= mem_dout;
-                        `OP_LBU: CBD_value <= {24'b0, mem_dout[7:0]};
+                        `OP_LBU: CBD_value <= {{24{1'b0}}, mem_dout[7:0]};
                         `OP_LHU: CBD_value <= {16'b0, mem_dout[15:0]};
                     endcase
                 end

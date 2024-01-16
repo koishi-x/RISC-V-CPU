@@ -45,3 +45,29 @@
 `define RS_SIZE_LOG 4
 `define SLB_SIZE 16
 `define SLB_SIZE_LOG 4
+
+//--------------
+
+`define HIGH 1'b1
+`define LOW 1'b0
+`define TRUE 1'b1
+`define FALSE 1'b0
+
+`define CacheEntries 256
+
+`define ROB_LOG 4
+`define RS_LOG 4
+`define OP_LOG 6
+`define LSB_LOG 4
+`define LSB_SIZE 16
+
+`define STORE 1'b1
+`define LOAD 1'b0
+
+`define STATUS_IDLE 2'b00
+`define STATUS_IF 2'b01
+`define STATUS_LOAD 2'b10
+`define STATUS_STORE 2'b11
+
+`define PRED_SIZE 256
+`define PRED_RANGE 9:2
