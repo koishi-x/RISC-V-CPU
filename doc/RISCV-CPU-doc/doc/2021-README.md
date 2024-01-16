@@ -2,7 +2,7 @@
 
 > 以下为附录内容。
 
-### 附录 
+### 附录
 
 > 附录为 2021 年旧题面，有些指令可作参考
 
@@ -34,24 +34,25 @@
 
 #### Basic Requirement
 
-- Use Verilog to implement a CPU supporting part of RV32I Instruction set(2.1-2.6 in [RISC-V user manual](https://riscv.org//wp-content/uploads/2017/05/riscv-spec-v2.2.pdf)), with the provided code in this repository. 
+- Use Verilog to implement a CPU supporting part of RV32I Instruction set(2.1-2.6 in [RISC-V user manual](https://riscv.org//wp-content/uploads/2017/05/riscv-spec-v2.2.pdf)), with the provided code in this repository.
 
 #### Grading Policy
 
-- A design meeting part of a requirement can get part of its corresponding points. 
+- A design meeting part of a requirement can get part of its corresponding points.
 - The course project assignment is not mature yet. Please give practical suggestions or bug fixes for next year's project if you feel somewhere uncomfortable with current project. You should prepare a short note or presentation for your findings. You will get extra 2% for this. If you implement your suggestion and it's meaningful in both educational purpose and project perfection purpose, the extra credit will be raised up -- up to 10%. It will be a complement for your bonus part, or extra 1 point in the final grading if you get full mark in the project.
 
 ### Details
 
 #### RISCV-Toolchain
 
-For prerequisites, go to see https://github.com/riscv/riscv-gnu-toolchain to install necessary packages.
-The configure is: 
+For prerequisites, go to see <https://github.com/riscv/riscv-gnu-toolchain> to install necessary packages.
+The configure is:
 
 ```
 ./configure --prefix=/opt/riscv --with-arch=rv32i --with-abi=ilp32
 sudo make
 ```
+
 **DO NOT** use `sudo make linux` which you may use in PPCA. If you have made it, just rerun `sudo make` without any deletion and everything will be ok.
 (BTW, you may use arch rv32gc for your compiler project, so keep the installation package)
 
@@ -67,11 +68,11 @@ Use configuration `./configure --prefix=/opt/riscv --with-arch=rv32ia --with-abi
 
 ###### `xxx-ld: cannot find -lgcc`
 
-Go to see https://github.com/riscv/riscv-gnu-toolchain/issues/522.
+Go to see <https://github.com/riscv/riscv-gnu-toolchain/issues/522>.
 
 #### Custom
 
-In this project, the size of memory(ram) is 128K, so only address lower than 0x20000 is available. However, reading and writing from 0x30000 and 0x30004 have special meaning, you can see `riscv/src/cpu.v` for more details. 
+In this project, the size of memory(ram) is 128K, so only address lower than 0x20000 is available. However, reading and writing from 0x30000 and 0x30004 have special meaning, you can see `riscv/src/cpu.v` for more details.
 
 #### Simulation using iverilog
 
@@ -83,7 +84,7 @@ vvp a.out
 
 #### Serial
 
-Serial( [wjwwood/serial](https://github.com/wjwwood/serial)) is a cross-platform serial port library to help your design working on FPGA when receiving from UART. Build it by: 
+Serial( [wjwwood/serial](https://github.com/wjwwood/serial)) is a cross-platform serial port library to help your design working on FPGA when receiving from UART. Build it by:
 
 ```bash
 git submodule init
@@ -95,14 +96,14 @@ make install
 
 #### Build test
 
-Use the following command to build a test, it will be a `test.data` file in folder `/riscv/test/`: 
+Use the following command to build a test, it will be a `test.data` file in folder `/riscv/test/`:
 
 ```bash
 cd riscv
 ./build_test.sh testname
 ```
 
-You can see all tests in `/riscv/testcase/` folder. 
+You can see all tests in `/riscv/testcase/` folder.
 
 #### FPGA
 
@@ -128,7 +129,7 @@ on WSL: /dev/ttySX
 on Windows: COMX
 ```
 
-Your Vivado may be unable to discover your FPGA, this may be caused by the lack of corresponding driver, install it by(use your own version to replace `2018.2`): 
+Your Vivado may be unable to discover your FPGA, this may be caused by the lack of corresponding driver, install it by(use your own version to replace `2018.2`):
 
 ```bash
 cd $PATH_TO_VIVADO/2018.2/data/xicom/cable_drivers/lin64
@@ -137,16 +138,16 @@ cd /opt/install_script/install_drivers
 sudo ./install_drivers
 ```
 
-Then restart Vivado. 
+Then restart Vivado.
 
-To run your bitstream on FPGA, you can run: 
+To run your bitstream on FPGA, you can run:
 
 ```bash
 cd riscv
 python FPGA_test.py
 ```
 
-You need to modify the `path_of_bit` in `FPGA_test.py` first. 
+You need to modify the `path_of_bit` in `FPGA_test.py` first.
 
 ### Update Note
 
@@ -156,7 +157,7 @@ For some strong students that start project early based on last year's assignmen
 
 2. A new `input wire io_buffer_full`  that will show the UART output buffer is full and you should stall -- otherwise some output will be missing when output requests are intensive. You can ignore the problem in the beginning stage.
 
-   Note: you will receive `io_buffer_full` in the SECOND NEXT CYCLE from your write cycle since the FIFO module's limitation. To ensure FIFO is not full you have to stall one cycle when there are two consecutive writes to 0x30000 in two consecutive clock, especially when i-cache is on. This problem will be detected in the testcase `uartboom`. 
+   Note: you will receive `io_buffer_full` in the SECOND NEXT CYCLE from your write cycle since the FIFO module's limitation. To ensure FIFO is not full you have to stall one cycle when there are two consecutive writes to 0x30000 in two consecutive clock, especially when i-cache is on. This problem will be detected in the testcase `uartboom`.
 
    You're welcome to fix this problem by modifying preset code. Elegant implementation will be counted as bonus.
 
@@ -164,17 +165,17 @@ For some strong students that start project early based on last year's assignmen
 
 1. `rdy_in` and `rst_in`
 
-   The `rst_in` has higher priority with `rdy_in`, and you CANNOT DO ANYTING when `rdy_in` is zero. `rdy_in` does not affect the result of simulation, but has effect when running on FPGA. 
+   The `rst_in` has higher priority with `rdy_in`, and you CANNOT DO ANYTING when `rdy_in` is zero. `rdy_in` does not affect the result of simulation, but has effect when running on FPGA.
 
 2. Write twice in simulation
 
-   This is often OK in simulation, because it uses `$write()` in a combinational circuit to simulate a write(you can find it in `hci.v`), and by the property of combinational circuit, this instruction may be executed twice. 
+   This is often OK in simulation, because it uses `$write()` in a combinational circuit to simulate a write(you can find it in `hci.v`), and by the property of combinational circuit, this instruction may be executed twice.
 
-   In FPGA if everything you write is correct this will not happen. 
+   In FPGA if everything you write is correct this will not happen.
 
 3. connect with FPGA
 
-   Use the micro USB port on the FPGA, since we use RS232 to transmit data. 
+   Use the micro USB port on the FPGA, since we use RS232 to transmit data.
 
 You may meet various problems, especially when start testing on FPGA. Feel free to contact any TA for help.
 
