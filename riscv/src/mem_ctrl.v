@@ -90,7 +90,8 @@ module mem_ctrl (
                 end else status <= 0;
                 2: 
                 //if (!io_buffer_full || addr_from_slb[17:16] != 2'b11) begin
-                if (addr_from_slb[17:16] != 2'b11) begin
+                //if (addr_from_slb[17:16] != 2'b11) 
+                begin
                     mem_wr <= 1;
                     case (pos) 
                         3'd0: mem_dout <= slb_din[7:0];
