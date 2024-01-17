@@ -29,14 +29,14 @@ module mem_ctrl (
 );
 
     reg[2:0] pos;   //one byte read/write only in one cycle
-    reg[1:0] op_type;   //0 for null, 1 for instruction read, 2 for store, 3 for load
+    reg[1:0] status;   //0 for null, 1 for instruction read, 2 for store, 3 for load
     always @(posedge clk) begin
         if (rst) begin
             mem_wr <= 0;
             ic_enable <= 0;
             slb_enable <= 0;
             pos <= 0;
-            op_type <= 0;
+            status <= 0;
         end
         else if (!rdy) begin
             mem_wr <= 0;
@@ -46,7 +46,7 @@ module mem_ctrl (
         end
         else begin
             mem_wr <= 0;
-            case (op_type)
+            case (status)
                 0: begin
                     ic_enable <= 0;
                     slb_enable <= 0;
@@ -54,11 +54,11 @@ module mem_ctrl (
                         if (slb_valid) begin
                             if (slb_wr) begin   //store
                                 //mem_wr <= 0;    //do not store immediately
-                                op_type <= 2;
+                                status <= 2;
                                 mem_a <= 0;
                             end else begin    //load
                                 //mem_wr <= 0;
-                                op_type <= 3;
+                                status <= 3;
                                 mem_a <= addr_from_slb;
                             end
                             pos <= 0;
@@ -66,7 +66,7 @@ module mem_ctrl (
                         else if (ic_valid) begin
                             //mem_wr <= 0;
                             mem_a <= addr_from_ic;
-                            op_type <= 1;
+                            status <= 1;
                             pos <= 0;
                         end
                     end
@@ -80,14 +80,14 @@ module mem_ctrl (
                         3'd4: inst_to_ic[31:24] <= mem_din;
                     endcase
                     if (pos == 3'd4) begin
-                        op_type <= 0;
+                        status <= 0;
                         ic_enable <= 1;
                     end
                     else begin
                         mem_a <= mem_a + 1;
                         pos <= pos + 1;
                     end
-                end
+                end else status <= 0;
                 2: if (!io_buffer_full || addr_from_slb[17:16] != 2'b11) begin
                     mem_wr <= 1;
                     case (pos) 
@@ -99,7 +99,7 @@ module mem_ctrl (
                     if (pos == siz_from_slb) begin
                         mem_wr <= 0;
                         mem_a <= 0;
-                        op_type <= 0;
+                        status <= 0;
                         slb_enable <= 1;
                     end
                     else begin
@@ -118,7 +118,7 @@ module mem_ctrl (
                         3'd4: slb_dout[31:24] <= mem_din;
                     endcase
                     if (pos == siz_from_slb) begin
-                        op_type <= 0;
+                        status <= 0;
                         slb_enable <= 1;
                     end
                     else begin
@@ -126,7 +126,7 @@ module mem_ctrl (
                         pos <= pos + 1;
                     end
                 end
-                else op_type <= 0;
+                else status <= 0;
             endcase
         end
     end

@@ -20,7 +20,8 @@ module SLB(
     input wire[`ROB_SIZE_LOG - 1:0] issue_qk,
     input wire issue_rk,
     input wire[31:0] issue_imm,
-    input wire[`ROB_SIZE_LOG - 1:0] issue_robid,
+    input wire[`ROB_SIZE_LOG - 1:0] issue_DestRob,
+    //input wire[`ROB_SIZE_LOG - 1:0] issue_robid,
     
     input wire ALU_valid,
     input wire[31:0] ALU_value,
@@ -90,8 +91,8 @@ module SLB(
         else if (pred_fail_flag) begin  //做完该做的store操作
             tail <= back;
             for (i = 0; i < `SLB_SIZE; i = i + 1) begin
-                if (!(is_busy[i] && is_store_ready[i])) begin
-                    is_store_ready[i] <= 0;
+                if (!is_busy[i] || !is_store_ready[i]) begin
+                    //is_store_ready[i] <= 0;
                     is_busy[i] <= 0;
                     is_send_to_rob[i] <= 0;
                     rj[i] <= 0;
@@ -102,6 +103,7 @@ module SLB(
                 is_waiting_mem <= 0;
                 mem_enable <= 0;
                 head <= front;
+                if (back == head) back <= front;//not neccesary?
                 is_busy[front] <= 0;
                 is_store_ready[front] <= 0;
                 is_send_to_rob[front] <= 0;
@@ -120,9 +122,9 @@ module SLB(
                 rj[nextid] <= issue_rj;
                 vk[nextid] <= issue_vk;
                 qk[nextid] <= issue_qk;
-                rk[nextid] <= issue_op_type <= `OP_LHU ? 1 : issue_rk;
+                rk[nextid] <= issue_rk;
                 imm[nextid] <= issue_imm;
-                dest_robid[nextid] <= issue_robid;
+                dest_robid[nextid] <= issue_DestRob;
                 tail <= nextid;
 
                 // if (ALU_valid) begin
@@ -199,7 +201,7 @@ module SLB(
                 //     case(op_type[front]) 
                 // end
                 if (!is_empty && rj[front] && rk[front]) begin
-                    if (op_type[front] <= `OP_LHU) begin
+                    if (op_type[front] < `OP_SB) begin
                         if (front_addr[17:16] != 2'b11 || rob_frontid == dest_robid[front]) begin
                             case(op_type[front])
                                 `OP_LB, `OP_LBU: begin
@@ -259,7 +261,7 @@ module SLB(
                 end
             end
             else if (mem_valid) begin
-                if (op_type[front] <= `OP_LHU && mem_enable) begin
+                if (mem_wr_tag == 0 && mem_enable) begin
                     CBD_enable <= 1;
                     CBD_ROBid <= dest_robid[front];
                     case (op_type[front])
@@ -267,18 +269,18 @@ module SLB(
                         `OP_LH: CBD_value <= {{16{mem_dout[15]}}, mem_dout[15:0]};
                         `OP_LW: CBD_value <= mem_dout;
                         `OP_LBU: CBD_value <= {{24{1'b0}}, mem_dout[7:0]};
-                        `OP_LHU: CBD_value <= {16'b0, mem_dout[15:0]};
+                        `OP_LHU: CBD_value <= {{16{1'b0}}, mem_dout[15:0]};
                     endcase
                 end
                 mem_enable <= 0;
                 is_waiting_mem <= 0;
                 head <= front;
+                if (back == head) back <= front;
                 is_busy[front] <= 0;
                 is_store_ready[front] <= 0;
                 is_send_to_rob[front] <= 0;
                 rj[front] <= 0;
                 rk[front] <= 0;
-                if (back == head) back <= front;
             end
         end
     end

@@ -58,7 +58,7 @@ module IFetch(
         if (rst) begin 
             pc <= 0;
             inst_send_enable <= 0;
-            for (i = 0; i < 256; ++i) predictor[i] <= 0;
+            for (i = 0; i < 256; i = i + 1) predictor[i] <= 0;
         end
         else if (!rdy) begin end
         else begin
