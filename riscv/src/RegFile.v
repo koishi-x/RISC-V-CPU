@@ -70,8 +70,8 @@ module reg_file (
                     is_rename[i] <= 0;
                 end
             end
-            else if (rename_valid) begin
-                if (rename_regid != 0) begin
+            else begin
+                if (rename_valid && rename_regid != 0) begin
                     rf[rename_regid] <= rename_robid;
                     is_rename[rename_regid] <= 1;
                 end

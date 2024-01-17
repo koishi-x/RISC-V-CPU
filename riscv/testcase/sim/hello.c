@@ -1,31 +1,45 @@
 #include "io.h"
-int cd(int d, char* a, char* b, char* c, int sum) {
-    sleep(5); // to prevent UART buffer from overflowing
-    if (d == 1) {
-        // print("move ");
-        // print(a);
-        // print(" --> ");
-        // println(c);
-        sum++;
-    } else {
-        sum = cd(d - 1, a, c, b, sum);
-        // print("move ");
-        // print(a);
-        // print(" --> ");
-        // println(c);
-        sum = cd(d - 1, b, a, c, sum);
-        sum++;
+int N = 8;
+int row[8];
+int col[8];
+int d[2][16];
+int sum = 0;
+void printBoard() {
+    int i;
+    int j;
+    for (i = 0; i < N; i++) {
+        for (j = 0; j < N; j++) {
+            if (col[i] == j)
+                print(" O");
+            else
+                print(" .");
+        }
+        println("");
     }
-    return sum;
+    ++sum;
+    outlln(sum);
+    println("");
+    sleep(50); // to prevent UART buffer from overflowing
+}
+
+void search(int c) {
+    if (c == N) {
+        printBoard();
+    }
+    else {
+        int r;
+        for (r = 0; r < N; r++) {
+            if (row[r] == 0 && d[0][r+c] == 0 && d[1][r+N-1-c] == 0) {
+                row[r] = d[0][r+c] = d[1][r+N-1-c] = 1;
+                col[c] = r;
+                search(c+1);
+                row[r] = d[0][r+c] = d[1][r+N-1-c] = 0;
+            }
+        }
+    }
 }
 
 int main() {
-    char a[5] = "A";
-	char b[5] = "B";
-	char c[5] = "C";
-    int d = 10;
-    int sum = cd(d, a, b, c, 0);
-    outlln(sum);
+    search(0);
     return 0;
 }
-

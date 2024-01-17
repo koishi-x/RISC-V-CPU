@@ -121,18 +121,17 @@ module RS(
                 //     end
                 // end
 
-                case(issue_op_type)
-                    `OP_LUI, `OP_AUIPC, `OP_JAL: begin
-                        rj[empty_pos] <= 1;
-                        rk[empty_pos] <= 1;
-                    end
-                    `OP_JALR, `OP_ADDI, `OP_SLTI, `OP_SLTIU, `OP_XORI, `OP_ORI, `OP_ANDI, `OP_SLLI, `OP_SRLI, `OP_SRAI: begin
-                        rk[empty_pos] <= 1;
-                    end
-                endcase
+                // case(issue_op_type)
+                //     `OP_LUI, `OP_AUIPC, `OP_JAL: begin
+                //         rj[empty_pos] <= 1;
+                //         rk[empty_pos] <= 1;
+                //     end
+                //     `OP_JALR, `OP_ADDI, `OP_SLTI, `OP_SLTIU, `OP_XORI, `OP_ORI, `OP_ANDI, `OP_SLLI, `OP_SRLI, `OP_SRAI: begin
+                //         rk[empty_pos] <= 1;
+                //     end
+                // endcase
 
             end
-            ALU_enable <= 0;
             if (has_ready) begin
                 ALU_enable <= 1;
                 op_to_ALU <= op_type[ready_pos];
@@ -143,8 +142,9 @@ module RS(
                 curpc_to_ALU <= cur_pc[ready_pos];
                 is_busy[ready_pos] <= 0;
                 //has_ready <= 0;
-            end
-
+            end 
+            else ALU_enable <= 0;
+            
             if (ALU_valid) begin 
                 for (i = 0; i < `RS_SIZE; i = i + 1) begin
                     if (is_busy[i]) begin
