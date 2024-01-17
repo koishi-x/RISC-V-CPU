@@ -381,7 +381,7 @@ module cpu(
     .issue_rk      (issue_Rk),
     .issue_qk      (issue_Qk),
     .issue_imm     (issue_Imm),
-    .issue_robid (issue_send_RobId),
+    .issue_DestRob (issue_send_RobId),
     .rob_store_valid (rob_to_lsb_valid),
     .rob_store_valid_robid     (rob_to_lsb_RobId),
     .ALU_valid     (fu_broadcast_valid),
